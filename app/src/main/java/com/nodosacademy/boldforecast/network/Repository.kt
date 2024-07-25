@@ -10,4 +10,6 @@ class Repository @Inject constructor(private val networkDataSource: NetworkDataS
     suspend fun searchLocation(text: String): List<LocationItem> {
         return networkDataSource.searchLocation(text)
     }
+
+    suspend fun getForecast(lat: String, lon: String) = networkDataSource.getForecast(lat, lon)
 }

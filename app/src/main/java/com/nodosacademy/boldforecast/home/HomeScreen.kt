@@ -1,9 +1,11 @@
 package com.nodosacademy.boldforecast.home
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
@@ -11,6 +13,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -23,9 +26,9 @@ import com.nodosacademy.boldforecast.R
 fun HomeScreen(
     modifier: Modifier = Modifier,
     homeScreenUIState: HomeScreenUIState,
-    onHomeScreenEvent: (HomeScreenEvent) -> Unit
+    onHomeScreenEvent: (HomeScreenEvent) -> Unit,
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier.fillMaxSize()) {
         SearchBar(searchText = homeScreenUIState.searchText, onValueChange = {
             onHomeScreenEvent(HomeScreenEvent.OnSearchElement(it))
         })
@@ -68,7 +71,9 @@ fun EmptyStateAnimation(modifier: Modifier = Modifier) {
         isPlaying = true
     )
 
-    Column(modifier = modifier) {
+    Column(modifier = modifier.fillMaxSize()
+        .padding(top = 90.dp),
+        verticalArrangement = Arrangement.SpaceAround) {
         Text(text = "Bienvenido! Busca una ubicación para saber tu pronóstico del clima")
         LottieAnimation(
             composition = preloaderLottieComposition,
