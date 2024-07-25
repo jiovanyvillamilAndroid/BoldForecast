@@ -18,7 +18,7 @@ data class Hour(
     @SerializedName("pressure_mb") var pressureMb: Int? = null,
     @SerializedName("pressure_in") var pressureIn: Double? = null,
     @SerializedName("precip_mm") var precipMm: Double? = null,
-    @SerializedName("precip_in") var precipIn: Int? = null,
+    @SerializedName("precip_in") var precipIn: Double? = null,
     @SerializedName("snow_cm") var snowCm: Int? = null,
     @SerializedName("humidity") var humidity: Int? = null,
     @SerializedName("cloud") var cloud: Int? = null,

@@ -77,7 +77,6 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.squareup.converter.gson)
     implementation(libs.hilt.android)
-    implementation(libs.play.services.location)
     implementation(libs.coil.compose)
     implementation(libs.androidx.navigation.compose)
     kapt(libs.hilt.android.compiler)

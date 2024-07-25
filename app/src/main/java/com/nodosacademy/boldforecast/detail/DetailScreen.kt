@@ -1,6 +1,5 @@
 package com.nodosacademy.boldforecast.detail
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,26 +21,31 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import coil.compose.AsyncImage
 import com.nodosacademy.boldforecast.detail.data.DateDataUI
+import com.nodosacademy.boldforecast.detail.data.DetailScreenUIState
 import com.nodosacademy.boldforecast.detail.data.HourDataUI
 
 @Composable
-fun DetailScreen(modifier: Modifier = Modifier, latArgument: String, lonArgument: String) {
-    val gradientColors = listOf(Color.Black, Color.White, Color.Magenta, Color.Yellow)
+fun DetailScreen(
+    modifier: Modifier = Modifier,
+    detailScreenUIState: DetailScreenUIState,
+    fetchDetails: () -> Unit
+) {
+    LaunchedEffect(true) {
+            fetchDetails()
+    }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -50,19 +54,14 @@ fun DetailScreen(modifier: Modifier = Modifier, latArgument: String, lonArgument
     ) {
         Text(
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            text = "London",
+            text = detailScreenUIState.cityName,
             fontSize = 32.sp,
             color = Color.White,
             fontWeight = FontWeight.Bold,
-            style = TextStyle(
-                brush = Brush.linearGradient(
-                    colors = gradientColors
-                )
-            )
         )
         Text(
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            text = "Clear lat:${latArgument} - lon:${lonArgument}",
+            text = detailScreenUIState.country,
             fontSize = 12.sp,
             color = Color.White
         )
@@ -77,12 +76,12 @@ fun DetailScreen(modifier: Modifier = Modifier, latArgument: String, lonArgument
         ) {
             AsyncImage(
                 modifier = Modifier.size(75.dp),
-                model = "https://cdn.weatherapi.com/weather/64x64/day/176.png",
+                model = detailScreenUIState.currentConditionIconURL,
                 contentDescription = null
             )
             Text(
                 modifier = Modifier,
-                text = "20°",
+                text = "${detailScreenUIState.currentTemp}°",
                 fontSize = 75.sp,
                 color = Color.White
             )
@@ -98,7 +97,7 @@ fun DetailScreen(modifier: Modifier = Modifier, latArgument: String, lonArgument
                     contentDescription = null
                 )
                 Text(
-                    text = "06:48",
+                    text = "${detailScreenUIState.maxTemp}°",
                     fontSize = 12.sp,
                     color = Color.White
                 )
@@ -112,7 +111,7 @@ fun DetailScreen(modifier: Modifier = Modifier, latArgument: String, lonArgument
                     contentDescription = null
                 )
                 Text(
-                    text = "06:48",
+                    text = "${detailScreenUIState.minTemp}°",
                     fontSize = 12.sp,
                     color = Color.White
                 )
@@ -127,133 +126,9 @@ fun DetailScreen(modifier: Modifier = Modifier, latArgument: String, lonArgument
                 .clip(RoundedCornerShape(8.dp))
                 .background(Color.White.copy(alpha = 0.3f))
                 .padding(8.dp),
-            text = "48-hour forecast",
+            text = "24-hour forecast",
             color = Color.White
         )
-
-        val hourItems = arrayListOf(
-            HourDataUI(
-                time = "13",
-                tempC = 20.6,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/night/176.png"
-            ),
-            HourDataUI(
-                time = "14",
-                tempC = 20.4,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/night/299.png"
-            ),
-            HourDataUI(
-                time = "13",
-                tempC = 20.6,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/day/356.png"
-            ),
-            HourDataUI(
-                time = "14",
-                tempC = 20.4,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/night/299.png"
-            ),
-            HourDataUI(
-                time = "13",
-                tempC = 20.6,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/night/176.png"
-            ),
-            HourDataUI(
-                time = "14",
-                tempC = 20.4,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/day/356.png"
-            ),
-            HourDataUI(
-                time = "13",
-                tempC = 20.6,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/night/176.png"
-            ),
-            HourDataUI(
-                time = "14",
-                tempC = 20.4,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/night/299.png"
-            ),
-            HourDataUI(
-                time = "13",
-                tempC = 20.6,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/night/176.png"
-            ),
-            HourDataUI(
-                time = "14",
-                tempC = 20.4,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/night/299.png"
-            ),
-            HourDataUI(
-                time = "13",
-                tempC = 20.6,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/night/176.png"
-            ),
-            HourDataUI(
-                time = "14",
-                tempC = 20.4,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/night/299.png"
-            ),
-            HourDataUI(
-                time = "13",
-                tempC = 20.6,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/night/176.png"
-            ),
-            HourDataUI(
-                time = "14",
-                tempC = 20.4,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/night/299.png"
-            ),
-            HourDataUI(
-                time = "13",
-                tempC = 20.6,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/night/176.png"
-            ),
-            HourDataUI(
-                time = "14",
-                tempC = 20.4,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/night/299.png"
-            ),
-            HourDataUI(
-                time = "13",
-                tempC = 20.6,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/night/176.png"
-            ),
-            HourDataUI(
-                time = "14",
-                tempC = 20.4,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/night/299.png"
-            ),
-            HourDataUI(
-                time = "13",
-                tempC = 20.6,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/night/176.png"
-            ),
-            HourDataUI(
-                time = "14",
-                tempC = 20.4,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/night/299.png"
-            ),
-            HourDataUI(
-                time = "13",
-                tempC = 20.6,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/night/176.png"
-            ),
-            HourDataUI(
-                time = "14",
-                tempC = 20.4,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/night/299.png"
-            ),
-            HourDataUI(
-                time = "13",
-                tempC = 20.6,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/night/176.png"
-            ),
-            HourDataUI(
-                time = "14",
-                tempC = 20.4,
-                conditionIconURL = "https://cdn.weatherapi.com/weather/64x64/night/299.png"
-            ),
-
-            )
 
         LazyRow(
             modifier = Modifier
@@ -263,7 +138,7 @@ fun DetailScreen(modifier: Modifier = Modifier, latArgument: String, lonArgument
                 .background(Color.White.copy(alpha = 0.3f))
                 .padding(8.dp)
         ) {
-            items(hourItems) {
+            items(detailScreenUIState.hoursForecast) {
                 Column(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally),
@@ -371,7 +246,7 @@ fun DetailScreen(modifier: Modifier = Modifier, latArgument: String, lonArgument
                 .background(Color.White.copy(alpha = 0.3f))
                 .padding(8.dp),
         ) {
-            items(dayItems) {
+            items(detailScreenUIState.datesData) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -409,11 +284,4 @@ fun DetailScreen(modifier: Modifier = Modifier, latArgument: String, lonArgument
         }
 
     }
-}
-
-
-@Preview
-@Composable
-fun Preview() {
-    DetailScreen(modifier = Modifier.fillMaxSize(), latArgument = "", lonArgument = "")
 }

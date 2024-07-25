@@ -1,11 +1,15 @@
 package com.nodosacademy.boldforecast.network.retrofit
 
+import android.annotation.SuppressLint
 import com.nodosacademy.boldforecast.detail.data.DateDataUI
-import com.nodosacademy.boldforecast.detail.data.DetailScreenData
+import com.nodosacademy.boldforecast.detail.data.DetailScreenUIState
 import com.nodosacademy.boldforecast.detail.data.HourDataUI
 import com.nodosacademy.boldforecast.home.LocationItem
 import com.nodosacademy.boldforecast.network.NetworkDataSource
+import java.text.SimpleDateFormat
+import java.util.Date
 import javax.inject.Inject
+
 
 class RetrofitClient @Inject constructor(private val apiService: ApiService) : NetworkDataSource {
 
@@ -23,37 +27,60 @@ class RetrofitClient @Inject constructor(private val apiService: ApiService) : N
         }
     }
 
-    override suspend fun getForecast(lat: String, lon: String): DetailScreenData {
+    override suspend fun getForecast(lat: Double, lon: Double): DetailScreenUIState {
         val forecast = apiService.getForecast("$lat,$lon")
         val hourData = arrayListOf<HourDataUI>()
         val datesData = arrayListOf<DateDataUI>()
+        val currentForecastDay = forecast.forecast?.forecastday?.first()
 
-        forecast.forecast?.forecastday?.first()?.hour?.forEachIndexed { index, hour ->
+        currentForecastDay?.hour?.forEachIndexed { index, hour ->
+            val hourText = if (index + 1 < 10) {
+                "0${index}"
+            } else {
+                "$index"
+            }
+
             hourData.add(
                 HourDataUI(
-                    time = "${index + 1}",
+                    time = hourText,
                     tempC = hour.tempC ?: 0.0,
-                    conditionIconURL = hour.condition?.icon.orEmpty()
+                    conditionIconURL = "https:" + hour.condition?.icon.orEmpty()
                 )
             )
         }
 
         forecast.forecast?.forecastday?.forEach {
-            DateDataUI(
-                dayName = "martes",
-                conditionIcon = it.day?.condition?.icon.orEmpty(),
-                maxTemp = it.day?.maxtempC ?: 0.0,
-                minTemp = it.day?.mintempC ?: 0.0
+            it.day?.let { day ->
+                datesData.add(
+                    DateDataUI(
+                        dayName = getDayName(it.date.orEmpty()),
+                        conditionIcon = "https:" + day.condition?.icon.orEmpty(),
+                        maxTemp = day.maxtempC ?: 0.0,
+                        minTemp = day.mintempC ?: 0.0
 
-            )
+                    )
+                )
+            }
         }
 
-        return DetailScreenData(
+        return DetailScreenUIState(
             cityName = forecast.location?.name.orEmpty(),
+            country = forecast.location?.country.orEmpty(),
+            currentConditionIconURL = "https:" + forecast.current?.condition?.icon.orEmpty(),
+            maxTemp = currentForecastDay?.day?.maxtempC ?: 0.0,
+            minTemp = currentForecastDay?.day?.mintempC ?: 0.0,
             currentTemp = forecast.current?.tempC ?: 0.0,
             hoursForecast = hourData,
             datesData = datesData
         )
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun getDayName(textDate: String): String {
+        val inFormat = SimpleDateFormat("yyyy-MM-dd")
+        val date: Date? = inFormat.parse(textDate)
+        val outFormat = SimpleDateFormat("EEEE")
+        return date?.let { outFormat.format(it) }.orEmpty()
     }
 
 

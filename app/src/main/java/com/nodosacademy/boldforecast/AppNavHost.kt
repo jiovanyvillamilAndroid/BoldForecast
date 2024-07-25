@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.nodosacademy.boldforecast.detail.DetailScreen
+import com.nodosacademy.boldforecast.detail.data.DetailScreenUIState
 import com.nodosacademy.boldforecast.home.HomeScreen
 import com.nodosacademy.boldforecast.home.HomeScreenEvent
 import com.nodosacademy.boldforecast.home.HomeScreenUIState
@@ -18,7 +19,9 @@ fun AppNavHost(
     navController: NavHostController,
     startDestination: String = NavigationItem.Home.route,
     homeScreenUIState: HomeScreenUIState,
-    onHomeScreenEvent: (HomeScreenEvent) -> Unit
+    onHomeScreenEvent: (HomeScreenEvent) -> Unit,
+    detailScreenUIState: DetailScreenUIState,
+    fetchDetails: (String?, String?) -> Unit,
 ) {
     NavHost(
         modifier = modifier,
@@ -28,7 +31,7 @@ fun AppNavHost(
         composable(NavigationItem.Home.route) {
             HomeScreen(homeScreenUIState = homeScreenUIState, onHomeScreenEvent = {
                 when (it) {
-                    is HomeScreenEvent.OnItemNavigation -> navController.navigate(NavigationItem.Detail.route + "/lat=${it.lat}/lon=${it.lon}")
+                    is HomeScreenEvent.OnItemNavigation -> navController.navigate(NavigationItem.Detail.route + "/${it.lat}/${it.lon}")
                     is HomeScreenEvent.OnSearchElement -> onHomeScreenEvent(it)
                 }
             })
@@ -45,7 +48,12 @@ fun AppNavHost(
                 val lat = it.getString("lat")
                 val lon = it.getString("lon")
                 if (lat != null && lon != null) {
-                    DetailScreen(latArgument = lat, lonArgument = lon)
+                    DetailScreen(
+                        detailScreenUIState = detailScreenUIState,
+                        fetchDetails = {
+                            fetchDetails(lat, lon)
+                        },
+                    )
                 }
             }
         }
