@@ -70,7 +70,6 @@ fun DetailScreen(
             detailScreenUIState.minTemp
         )
 
-        //----------------------------------------
         Text(
             modifier = Modifier
                 .fillMaxWidth()
@@ -99,7 +98,7 @@ fun DetailScreen(
 }
 
 @Composable
-fun NextDaysForecast(modifier: Modifier = Modifier, daysDataList:List<DayDataUI>){
+fun NextDaysForecast(modifier: Modifier = Modifier, daysDataList: List<DayDataUI>) {
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
@@ -146,7 +145,7 @@ fun NextDaysForecast(modifier: Modifier = Modifier, daysDataList:List<DayDataUI>
 }
 
 @Composable
-fun HoursForecast(modifier: Modifier = Modifier, hoursForecast:List<HourDataUI>){
+fun HoursForecast(modifier: Modifier = Modifier, hoursForecast: List<HourDataUI>) {
     LazyRow(
         modifier = modifier
             .fillMaxWidth()

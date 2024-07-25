@@ -21,7 +21,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideHttpClient(): OkHttpClient{
+    fun provideHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val url = chain
@@ -61,5 +61,6 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun providesNetworkDataSource(apiService: ApiService) : NetworkDataSource = RetrofitClient(apiService)
+    fun providesNetworkDataSource(apiService: ApiService): NetworkDataSource =
+        RetrofitClient(apiService)
 }

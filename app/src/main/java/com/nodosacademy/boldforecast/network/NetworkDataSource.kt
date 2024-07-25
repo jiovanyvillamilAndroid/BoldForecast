@@ -7,5 +7,5 @@ interface NetworkDataSource {
 
     suspend fun searchLocation(text: String): List<LocationItem>
 
-    suspend fun getForecast(lat: Double, lon:Double): DetailScreenUIState
+    suspend fun getForecast(lat: Double, lon: Double): DetailScreenUIState
 }
