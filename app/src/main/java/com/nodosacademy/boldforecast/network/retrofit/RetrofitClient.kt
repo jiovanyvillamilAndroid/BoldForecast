@@ -1,7 +1,8 @@
 package com.nodosacademy.boldforecast.network.retrofit
 
 import android.annotation.SuppressLint
-import com.nodosacademy.boldforecast.detail.data.DateDataUI
+import com.nodosacademy.boldforecast.data.Forecastday
+import com.nodosacademy.boldforecast.detail.data.DayDataUI
 import com.nodosacademy.boldforecast.detail.data.DetailScreenUIState
 import com.nodosacademy.boldforecast.detail.data.HourDataUI
 import com.nodosacademy.boldforecast.home.LocationItem
@@ -29,11 +30,43 @@ class RetrofitClient @Inject constructor(private val apiService: ApiService) : N
 
     override suspend fun getForecast(lat: Double, lon: Double): DetailScreenUIState {
         val forecast = apiService.getForecast("$lat,$lon")
-        val hourData = arrayListOf<HourDataUI>()
-        val datesData = arrayListOf<DateDataUI>()
-        val currentForecastDay = forecast.forecast?.forecastday?.first()
 
-        currentForecastDay?.hour?.forEachIndexed { index, hour ->
+        val forecastList = forecast.forecast?.forecastday
+        val currentForecastDay = forecastList?.first()
+
+        return DetailScreenUIState(
+            cityName = forecast.location?.name.orEmpty(),
+            country = forecast.location?.country.orEmpty(),
+            currentConditionIconURL = "https:" + forecast.current?.condition?.icon.orEmpty(),
+            maxTemp = currentForecastDay?.day?.maxtempC ?: 0.0,
+            minTemp = currentForecastDay?.day?.mintempC ?: 0.0,
+            currentTemp = forecast.current?.tempC ?: 0.0,
+            hoursForecast = currentForecastDay?.let { getForecastHourList(it) } ?: arrayListOf(),
+            daysForecastDataList = getForecastDaysList(forecastList)
+        )
+    }
+
+    private fun getForecastDaysList(forecastList: ArrayList<Forecastday>?): List<DayDataUI> {
+        val datesData = arrayListOf<DayDataUI>()
+        forecastList?.forEach {
+            it.day?.let { day ->
+                datesData.add(
+                    DayDataUI(
+                        dayName = getDayName(it.date.orEmpty()),
+                        conditionIcon = "https:" + day.condition?.icon.orEmpty(),
+                        maxTemp = day.maxtempC ?: 0.0,
+                        minTemp = day.mintempC ?: 0.0
+
+                    )
+                )
+            }
+        }
+        return datesData
+    }
+
+    private fun getForecastHourList(forecastDay: Forecastday): List<HourDataUI> {
+        val hourData = arrayListOf<HourDataUI>()
+        forecastDay.hour.forEachIndexed { index, hour ->
             val hourText = if (index + 1 < 10) {
                 "0${index}"
             } else {
@@ -48,31 +81,7 @@ class RetrofitClient @Inject constructor(private val apiService: ApiService) : N
                 )
             )
         }
-
-        forecast.forecast?.forecastday?.forEach {
-            it.day?.let { day ->
-                datesData.add(
-                    DateDataUI(
-                        dayName = getDayName(it.date.orEmpty()),
-                        conditionIcon = "https:" + day.condition?.icon.orEmpty(),
-                        maxTemp = day.maxtempC ?: 0.0,
-                        minTemp = day.mintempC ?: 0.0
-
-                    )
-                )
-            }
-        }
-
-        return DetailScreenUIState(
-            cityName = forecast.location?.name.orEmpty(),
-            country = forecast.location?.country.orEmpty(),
-            currentConditionIconURL = "https:" + forecast.current?.condition?.icon.orEmpty(),
-            maxTemp = currentForecastDay?.day?.maxtempC ?: 0.0,
-            minTemp = currentForecastDay?.day?.mintempC ?: 0.0,
-            currentTemp = forecast.current?.tempC ?: 0.0,
-            hoursForecast = hourData,
-            datesData = datesData
-        )
+        return hourData
     }
 
     @SuppressLint("SimpleDateFormat")

@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -71,9 +72,12 @@ fun EmptyStateAnimation(modifier: Modifier = Modifier) {
         isPlaying = true
     )
 
-    Column(modifier = modifier.fillMaxSize()
-        .padding(top = 90.dp),
-        verticalArrangement = Arrangement.SpaceAround) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(top = 90.dp),
+        verticalArrangement = Arrangement.SpaceAround
+    ) {
         Text(text = "Bienvenido! Busca una ubicación para saber tu pronóstico del clima")
         LottieAnimation(
             composition = preloaderLottieComposition,
@@ -103,9 +107,11 @@ fun LocationList(
             Text(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(8.dp)
                     .clickable {
                         onItemNavigation(HomeScreenEvent.OnItemNavigation(it.lat, it.lon))
                     },
+                fontSize = 18.sp,
                 text = "${it.name} - ${it.country}"
             )
         }

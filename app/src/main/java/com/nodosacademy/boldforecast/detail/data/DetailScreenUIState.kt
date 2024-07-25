@@ -8,5 +8,5 @@ data class DetailScreenUIState(
     val minTemp: Double = 0.0,
     val currentConditionIconURL: String = "",
     val hoursForecast: List<HourDataUI> = emptyList(),
-    val datesData: List<DateDataUI> = emptyList(),
+    val daysForecastDataList: List<DayDataUI> = emptyList(),
 )

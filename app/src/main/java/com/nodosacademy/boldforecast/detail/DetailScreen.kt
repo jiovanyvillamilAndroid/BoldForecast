@@ -25,15 +25,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import coil.compose.AsyncImage
-import com.nodosacademy.boldforecast.detail.data.DateDataUI
+import com.nodosacademy.boldforecast.detail.data.DayDataUI
 import com.nodosacademy.boldforecast.detail.data.DetailScreenUIState
 import com.nodosacademy.boldforecast.detail.data.HourDataUI
 
@@ -44,7 +42,7 @@ fun DetailScreen(
     fetchDetails: () -> Unit
 ) {
     LaunchedEffect(true) {
-            fetchDetails()
+        fetchDetails()
     }
     Column(
         modifier = modifier
@@ -52,71 +50,25 @@ fun DetailScreen(
             .background(Color("#158ADC".toColorInt()))
             .padding(top = 42.dp)
     ) {
-        Text(
+
+
+        Header(
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            text = detailScreenUIState.cityName,
-            fontSize = 32.sp,
-            color = Color.White,
-            fontWeight = FontWeight.Bold,
-        )
-        Text(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            text = detailScreenUIState.country,
-            fontSize = 12.sp,
-            color = Color.White
+            detailScreenUIState.cityName,
+            detailScreenUIState.country
         )
 
+        MainTemp(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            detailScreenUIState.currentConditionIconURL,
+            detailScreenUIState.currentTemp
+        )
 
-        //----------------------------------------
-        Row(
-            modifier = Modifier
-                .padding(top = 16.dp)
-                .align(Alignment.CenterHorizontally),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            AsyncImage(
-                modifier = Modifier.size(75.dp),
-                model = detailScreenUIState.currentConditionIconURL,
-                contentDescription = null
-            )
-            Text(
-                modifier = Modifier,
-                text = "${detailScreenUIState.currentTemp}°",
-                fontSize = 75.sp,
-                color = Color.White
-            )
-        }
-        //----------------------------------------
-
-        Row(modifier = Modifier.align(Alignment.CenterHorizontally)) {
-            Row {
-                Icon(
-                    modifier = Modifier.size(14.dp),
-                    imageVector = Icons.Default.KeyboardArrowUp,
-                    tint = Color.White,
-                    contentDescription = null
-                )
-                Text(
-                    text = "${detailScreenUIState.maxTemp}°",
-                    fontSize = 12.sp,
-                    color = Color.White
-                )
-            }
-            Spacer(modifier = Modifier.width(30.dp))
-            Row {
-                Icon(
-                    modifier = Modifier.size(14.dp),
-                    imageVector = Icons.Default.KeyboardArrowDown,
-                    tint = Color.White,
-                    contentDescription = null
-                )
-                Text(
-                    text = "${detailScreenUIState.minTemp}°",
-                    fontSize = 12.sp,
-                    color = Color.White
-                )
-            }
-        }
+        MaxMin(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            detailScreenUIState.maxTemp,
+            detailScreenUIState.minTemp
+        )
 
         //----------------------------------------
         Text(
@@ -130,39 +82,7 @@ fun DetailScreen(
             color = Color.White
         )
 
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(Color.White.copy(alpha = 0.3f))
-                .padding(8.dp)
-        ) {
-            items(detailScreenUIState.hoursForecast) {
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Text(
-                        text = it.time,
-                        color = Color.White
-                    )
-                    AsyncImage(
-                        modifier = Modifier.size(30.dp),
-                        model = it.conditionIconURL,
-                        contentDescription = null
-                    )
-                    Text(
-                        text = "${it.tempC}º",
-                        color = Color.White
-                    )
-                }
-                Spacer(modifier = Modifier.width(20.dp))
-            }
-        }
-        //---------------------------------------------------------------
+        HoursForecast(hoursForecast = detailScreenUIState.hoursForecast)
 
         Text(
             modifier = Modifier
@@ -174,114 +94,161 @@ fun DetailScreen(
             text = "10-day forecast",
             color = Color.White
         )
+        NextDaysForecast(daysDataList = detailScreenUIState.daysForecastDataList)
+    }
+}
 
-
-        val dayItems = arrayListOf(
-            DateDataUI(
-                dayName = "Monday",
-                conditionIcon = "https://cdn.weatherapi.com/weather/64x64/day/308.png",
-                maxTemp = 20.2,
-                minTemp = 12.1,
-            ),
-            DateDataUI(
-                dayName = "Monday",
-                conditionIcon = "https://cdn.weatherapi.com/weather/64x64/day/308.png",
-                maxTemp = 20.2,
-                minTemp = 12.1,
-            ),
-            DateDataUI(
-                dayName = "Monday",
-                conditionIcon = "https://cdn.weatherapi.com/weather/64x64/day/308.png",
-                maxTemp = 20.2,
-                minTemp = 12.1,
-            ),
-            DateDataUI(
-                dayName = "Monday",
-                conditionIcon = "https://cdn.weatherapi.com/weather/64x64/day/308.png",
-                maxTemp = 20.2,
-                minTemp = 12.1,
-            ),
-            DateDataUI(
-                dayName = "Monday",
-                conditionIcon = "https://cdn.weatherapi.com/weather/64x64/day/308.png",
-                maxTemp = 20.2,
-                minTemp = 12.1,
-            ),
-            DateDataUI(
-                dayName = "Monday",
-                conditionIcon = "https://cdn.weatherapi.com/weather/64x64/day/308.png",
-                maxTemp = 20.2,
-                minTemp = 12.1,
-            ),
-            DateDataUI(
-                dayName = "Monday",
-                conditionIcon = "https://cdn.weatherapi.com/weather/64x64/day/308.png",
-                maxTemp = 20.2,
-                minTemp = 12.1,
-            ),
-            DateDataUI(
-                dayName = "Monday",
-                conditionIcon = "https://cdn.weatherapi.com/weather/64x64/day/308.png",
-                maxTemp = 20.2,
-                minTemp = 12.1,
-            ),
-            DateDataUI(
-                dayName = "Monday",
-                conditionIcon = "https://cdn.weatherapi.com/weather/64x64/day/308.png",
-                maxTemp = 20.2,
-                minTemp = 12.1,
-            ),
-            DateDataUI(
-                dayName = "Monday",
-                conditionIcon = "https://cdn.weatherapi.com/weather/64x64/day/308.png",
-                maxTemp = 20.2,
-                minTemp = 12.1,
-            ),
-        )
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(12.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(Color.White.copy(alpha = 0.3f))
-                .padding(8.dp),
-        ) {
-            items(detailScreenUIState.datesData) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                        .weight(1f),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = it.dayName,
-                        color = Color.White
-                    )
-                    AsyncImage(
-                        modifier = Modifier.size(30.dp),
-                        model = it.conditionIcon,
+@Composable
+fun NextDaysForecast(modifier: Modifier = Modifier, daysDataList:List<DayDataUI>){
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(12.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(Color.White.copy(alpha = 0.3f))
+            .padding(8.dp),
+    ) {
+        items(daysDataList) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = it.dayName,
+                    color = Color.White
+                )
+                AsyncImage(
+                    modifier = Modifier.size(30.dp),
+                    model = it.conditionIcon,
+                    contentDescription = null
+                )
+                Row {
+                    Icon(
+                        tint = Color.White,
+                        imageVector = Icons.Filled.KeyboardArrowDown,
                         contentDescription = null
                     )
-                    Row {
-                        Icon(
-                            tint = Color.White,
-                            imageVector = Icons.Filled.KeyboardArrowDown,
-                            contentDescription = null
-                        )
-                        Text(text = "${it.minTemp}º", color = Color.White)
-                        Spacer(modifier = Modifier.width(20.dp))
-                        Icon(
-                            tint = Color.White,
-                            imageVector = Icons.Filled.KeyboardArrowUp,
-                            contentDescription = null
-                        )
-                        Text(text = "${it.maxTemp}º", color = Color.White)
-                    }
+                    Text(text = "${it.minTemp}º", color = Color.White)
+                    Spacer(modifier = Modifier.width(20.dp))
+                    Icon(
+                        tint = Color.White,
+                        imageVector = Icons.Filled.KeyboardArrowUp,
+                        contentDescription = null
+                    )
+                    Text(text = "${it.maxTemp}º", color = Color.White)
                 }
-                HorizontalDivider()
             }
+            HorizontalDivider()
         }
-
     }
+}
+
+@Composable
+fun HoursForecast(modifier: Modifier = Modifier, hoursForecast:List<HourDataUI>){
+    LazyRow(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(12.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .background(Color.White.copy(alpha = 0.3f))
+            .padding(8.dp)
+    ) {
+        items(hoursForecast) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    text = it.time,
+                    color = Color.White
+                )
+                AsyncImage(
+                    modifier = Modifier.size(30.dp),
+                    model = it.conditionIconURL,
+                    contentDescription = null
+                )
+                Text(
+                    text = "${it.tempC}º",
+                    color = Color.White
+                )
+            }
+            Spacer(modifier = Modifier.width(20.dp))
+        }
+    }
+}
+
+@Composable
+fun MaxMin(modifier: Modifier, maxTemp: Double, minTemp: Double) {
+    Row(modifier = modifier) {
+        Row {
+            Icon(
+                modifier = Modifier.size(14.dp),
+                imageVector = Icons.Default.KeyboardArrowUp,
+                tint = Color.White,
+                contentDescription = null
+            )
+            Text(
+                text = "${maxTemp}°",
+                fontSize = 12.sp,
+                color = Color.White
+            )
+        }
+        Spacer(modifier = Modifier.width(30.dp))
+        Row {
+            Icon(
+                modifier = Modifier.size(14.dp),
+                imageVector = Icons.Default.KeyboardArrowDown,
+                tint = Color.White,
+                contentDescription = null
+            )
+            Text(
+                text = "${minTemp}°",
+                fontSize = 12.sp,
+                color = Color.White
+            )
+        }
+    }
+}
+
+@Composable
+fun MainTemp(modifier: Modifier, currentConditionIconURL: String, currentTemp: Double) {
+    Row(
+        modifier = modifier
+            .padding(top = 16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        AsyncImage(
+            modifier = Modifier.size(75.dp),
+            model = currentConditionIconURL,
+            contentDescription = null
+        )
+        Text(
+            modifier = Modifier,
+            text = "${currentTemp}°",
+            fontSize = 75.sp,
+            color = Color.White
+        )
+    }
+}
+
+@Composable
+fun Header(modifier: Modifier, cityName: String, country: String) {
+    Column(modifier = modifier) {
+        Text(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            text = cityName,
+            fontSize = 32.sp,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+        )
+        Text(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            text = country,
+            fontSize = 12.sp,
+            color = Color.White
+        )
+    }
+
 }

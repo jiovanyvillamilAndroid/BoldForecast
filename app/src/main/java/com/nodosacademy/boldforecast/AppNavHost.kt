@@ -37,7 +37,6 @@ fun AppNavHost(
             })
         }
 
-        //TODO: try to improve this
         composable(
             NavigationItem.Detail.route + "/{lat}/{lon}",
             arguments = listOf(

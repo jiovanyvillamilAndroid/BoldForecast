@@ -1,6 +1,6 @@
 package com.nodosacademy.boldforecast.detail.data
 
-data class DateDataUI(
+data class DayDataUI(
     val dayName: String,
     val conditionIcon: String,
     val maxTemp: Double,
