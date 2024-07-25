@@ -67,7 +67,7 @@ class RetrofitClient @Inject constructor(private val apiService: ApiService) : N
     private fun getForecastHourList(forecastDay: Forecastday): List<HourDataUI> {
         val hourData = arrayListOf<HourDataUI>()
         forecastDay.hour.forEachIndexed { index, hour ->
-            val hourText = if (index + 1 < 10) {
+            val hourText = if (index < 10) {
                 "0${index}"
             } else {
                 "$index"
